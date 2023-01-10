@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Facade;
 
 return [
-
+    'map_api_key' => env('MAP_API_KEY'),
     /*
     |--------------------------------------------------------------------------
     | Application Name
