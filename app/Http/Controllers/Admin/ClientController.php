@@ -88,8 +88,7 @@ class ClientController extends Controller
      */
     public function destroy(Client $client): JsonResponse
     {
-        abort_if(
-            !auth('admin')->user()->can('create-clients'),
+        abort_unless(auth('admin')->user()->can('delete-clients'),
             403,
             'you don\'t have permission to do this action');
         $client->delete();
