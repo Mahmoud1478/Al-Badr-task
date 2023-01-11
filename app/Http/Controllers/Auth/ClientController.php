@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Classes\Upload;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\ClientRequest;
 use App\Jobs\OTPJop;
@@ -36,9 +37,12 @@ class ClientController extends Controller
     public function register(ClientRequest $request): RedirectResponse
     {
         $data = $request->validated();
+        $data['image'] = Upload::file($data['image'],'clients');
+        if ($request->hasFile('drive_licence')){
+            $data['drive_licence'] = Upload::file($data['drive_licence'],'clients','licence_');
+        }
         $client = Client::create($data);
-        $otp = $client->otp()->create();
-        $client->send_otp($otp);
+        $client->send_otp($client->otp()->create());
         auth('client')->login($client);
         return redirect('/welcome');
     }

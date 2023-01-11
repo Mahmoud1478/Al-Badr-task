@@ -6,6 +6,11 @@
     <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Rubik:400,700'>
     <link rel="stylesheet" href="{{ url('admin') }}/plugins/toastr/toastr.min.css">
     <link rel="stylesheet" href="{{url('client')}}/style.css">
+    <style>
+        .text-danger {
+            color: #dc3545!important;
+        }
+    </style>
 
 </head>
 <body>
@@ -16,7 +21,7 @@
         @csrf
         <div class="content">
             <div class="input-field">
-                <input type="email" name="email" placeholder="Email" autocomplete="nope">
+                <input type="email" name="email" required placeholder="Email" autocomplete="nope">
                 @error('email')
                 <span class="text-danger">
                             {{$message}}
@@ -24,7 +29,7 @@
                 @enderror
             </div>
             <div class="input-field">
-                <input type="password"  name="password" placeholder="Password" autocomplete="new-password">
+                <input type="password"  name="password" required placeholder="Password" autocomplete="new-password">
                 @error('password')
                 <span class="text-danger">
                             {{$message}}
@@ -42,27 +47,29 @@
     </form>
 </div>
 <!-- partial -->
+<script src="{{url('admin')}}/plugins/jquery/jquery.min.js"></script>
 <script src="{{url('admin')}}/plugins/toastr/toastr.min.js"></script>
 <script  src="{{url('client')}}/script.js"></script>
 <script>
-    toastr.options = {
-        "closeButton": true,
-        "debug": false,
-        "newestOnTop": false,
-        "progressBar": true,
-        "positionClass": "toast-top-right",
-        "preventDuplicates": true,
-        "onclick": null,
-        "showDuration": "300",
-        "hideDuration": "1000",
-        "timeOut": "3000",
-        "extendedTimeOut": "1000",
-        "showEasing": "swing",
-        "hideEasing": "linear",
-        "showMethod": "fadeIn",
-        "hideMethod": "fadeOut"
-    }
+
     $(document).ready(function (){
+        toastr.options = {
+            "closeButton": true,
+            "debug": false,
+            "newestOnTop": false,
+            "progressBar": true,
+            "positionClass": "toast-top-right",
+            "preventDuplicates": true,
+            "onclick": null,
+            "showDuration": "300",
+            "hideDuration": "1000",
+            "timeOut": "3000",
+            "extendedTimeOut": "1000",
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "fadeIn",
+            "hideMethod": "fadeOut"
+        }
         @if(session()->has('success'))
         toastr.success("{{session('success')}}")
         @endif

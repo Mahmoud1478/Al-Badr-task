@@ -19,7 +19,7 @@
             <div class="row">
                 <div class="form-group col-6">
                     <label>Name <span class="text-danger">*</span></label>
-                    <input type="text" name="name" class="form-control">
+                    <input type="text"  required value="{{old('name')}}" name="name" class="form-control">
                     @error('name')
                     <span class="text-danger">
                             {{$message}}
@@ -28,7 +28,7 @@
                 </div>
                 <div class="form-group col-6">
                     <label for="exampleInputEmail1">Email <span class="text-danger">*</span></label>
-                    <input type="email" name="email" class="form-control" id="exampleInputEmail1">
+                    <input type="email"  required value="{{old('email')}}"  name="email" class="form-control" id="exampleInputEmail1">
                     @error('email')
                     <span class="text-danger">
                             {{$message}}
@@ -39,7 +39,7 @@
             <div class="row">
                 <div class="form-group col-6">
                     <label for="exampleInputEmail1">Password</label>
-                    <input type="password" name="password" class="form-control" id="exampleInputEmail1">
+                    <input type="password" required name="password" class="form-control" id="exampleInputEmail1">
                     @error('password')
                     <span class="text-danger">
                             {{$message}}
@@ -48,7 +48,7 @@
                 </div>
                 <div class="form-group col-6">
                     <label for="phone">Password Confirmation</label>
-                    <input type="password" name="password_confirmation" class="form-control" id="phone">
+                    <input type="password" required name="password_confirmation" class="form-control" id="phone">
                     @error('password_confirmation')
                     <span class="text-danger">
                             {{$message}}
@@ -61,7 +61,7 @@
             <div class="row">
                 @foreach(\App\Classes\Permission::all() as $key=>$value)
                     <div class="col-md-2 col-md-3 col-lg-4">
-                        <input type="checkbox" value="{{$key}}" name="permissions[]">
+                        <input type="checkbox" value="{{$key}}" @checked(in_array($key, old('permissions')??[])) name="permissions[]">
                         <label>{{$value['name']}}</label>
 
                     </div>

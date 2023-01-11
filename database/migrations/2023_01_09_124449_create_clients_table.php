@@ -22,10 +22,11 @@ return new class extends Migration
             $table->string("phone");
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->boolean('is_active')->default(false);
             $table->string('image')->nullable();
             $table->string('drive_licence')->nullable();
-            $table->decimal("latitude")->nullable();
-            $table->decimal("longitude")->nullable();
+            $table->decimal("latitude",10,6)->nullable();
+            $table->decimal("longitude",10,6)->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

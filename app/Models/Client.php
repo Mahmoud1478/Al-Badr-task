@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Classes\Upload;
 use App\Jobs\OTPJop;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -24,7 +25,9 @@ class Client extends Authenticatable implements MustVerifyEmail
         'latitude',
         'longitude',
         'image',
-        'drive_licence'
+        'drive_licence',
+        'email_verified_at',
+        'is_active'
     ];
     protected $hidden = [
         'password',
@@ -32,6 +35,7 @@ class Client extends Authenticatable implements MustVerifyEmail
     ];
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'is_active' => 'boolean'
     ];
 
     /**
@@ -54,13 +58,29 @@ class Client extends Authenticatable implements MustVerifyEmail
      */
     public function fullName() : Attribute
     {
-        return Attribute::make(get: function () {
+        return Attribute::make(get:function () {
             return preg_replace(
                 '/\s\s+/',
                 ' ',
                 $this->first_name. ' ' . $this->mid_name.' '.$this->last_name
             );
         });
+    }
+
+    /**
+     * @return string
+     */
+    public function getImageUrlAttribute()
+    {
+
+        return Upload::url($this->image);
+    }
+    /**
+     * @return string
+     */
+    public function getDriveLicenceUrlAttribute()
+    {
+        return Upload::url($this->drive_licence);
     }
 
     /**
@@ -74,4 +94,5 @@ class Client extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasOne(OTP::class);
     }
+
 }

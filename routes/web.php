@@ -55,8 +55,11 @@ Route::group(['as'=>'client.'],function (){
     Route::group(['middleware'=> ['auth:client']],function (){
         Route::get('/welcome', function () {dd(auth('client')->user());})->middleware(['verified-email']);
         Route::get('/logout',[ClientAuth::class,'logout'])->name('logout');
-        Route::get('/verify',[ClientAuth::class,'verify'])->name('verify.email');
-        Route::post('/verify',[ClientAuth::class,'try_verify'])->name('try_verify');
-        Route::post('/verify/resend',[ClientAuth::class,'resend_otp'])->name('verify.resend');
+        Route::group(['middleware'=> ['unverified-email']],function (){
+            Route::get('/verify',[ClientAuth::class,'verify'])->name('verify.email');
+            Route::post('/verify',[ClientAuth::class,'try_verify'])->name('try_verify');
+            Route::post('/verify/resend',[ClientAuth::class,'resend_otp'])->name('verify.resend');
+        });
+
     });
 });

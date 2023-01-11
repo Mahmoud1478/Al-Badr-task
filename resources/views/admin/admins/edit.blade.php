@@ -20,7 +20,7 @@
             <div class="row">
                 <div class="form-group col-6">
                     <label>Name <span class="text-danger">*</span></label>
-                    <input type="text" name="name" class="form-control" value="{{$user->name}}">
+                    <input type="text" required name="name" class="form-control" value="{{$user->name}}">
                     @error('name')
                     <span class="text-danger">
                             {{$message}}
@@ -29,7 +29,7 @@
                 </div>
                 <div class="form-group col-6">
                     <label for="exampleInputEmail1">Email <span class="text-danger">*</span></label>
-                    <input type="email" name="email" class="form-control" id="exampleInputEmail1"
+                    <input type="email" required name="email" class="form-control" id="exampleInputEmail1"
                            value="{{$user->email}}">
                     @error('email')
                     <span class="text-danger">
@@ -41,7 +41,7 @@
             <div class="row">
                 <div class="form-group col-6">
                     <label for="exampleInputEmail1">Password</label>
-                    <input type="password" name="password" class="form-control" id="exampleInputEmail1">
+                    <input type="password"  name="password" class="form-control" id="exampleInputEmail1">
                     @error('password')
                     <span class="text-danger">
                             {{$message}}
@@ -66,7 +66,6 @@
                         <input type="checkbox" @checked(in_array($key,$user->permissions)) value="{{$key}}"
                                name="permissions[]">
                         <label>{{$value['name']}}</label>
-
                     </div>
                 @endforeach
 

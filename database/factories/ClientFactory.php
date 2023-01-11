@@ -20,9 +20,12 @@ class ClientFactory extends Factory
             'first_name' => $this->faker->firstName,
             'mid_name' => $this->faker->firstName,
             'last_name' => $this->faker->lastName,
-            'phone' => $this->faker->phoneNumber,
+            'phone' => fake('ar_EG')->phoneNumber,
             'email' => $this->faker->unique()->email,
-            'password' => 123
+            'password' => 123,
+            'latitude' => $this->faker->numberBetween(-90,90),
+            'longitude' => $this->faker->numberBetween(-180,180),
+            'is_active' => $this->faker->numberBetween(0,1)
         ];
     }
 }

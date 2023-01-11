@@ -29,6 +29,7 @@
                     <th>Full Name</th>
                     <th>Email</th>
                     <th>Phone</th>
+                    <th>Status</th>
                     <th>Verified At</th>
                     <th>Actions</th>
                 </tr>
@@ -71,21 +72,22 @@
                 buttons: ["copy", "csv", "excel", "pdf", "print", "colvis"],
                 ajax:{
                     url: "{{route('admin.clients.datatable')}}",
-                    delay: 250,
-                    type: "get"
+                    type: "get",
                 },
                 columns:[
-                    {data: "full_name", name: "full_name"},
+                    {data: "full_name" , name: 'first_name'},
                     {data: "email", name: "email"},
                     {data: "phone", name: "phone"},
+                    {data: "status", name: "is_active", searchable: false},
                     {data: "email_verified_at", name: "email_verified_at"},
-                    {data: "actions", searchable: false , orderable:false},
+                    {data: "actions",  searchable: false, orderable:false},
                 ],
+                searchDelay: 250,
             });
             $(document).on('click','.delete-btn', (e)=> deleteRecord(e.target, dt))
             $(document).on('click','.toggle', (e)=> {
                 const btn = $(e.target)
-                const msg = btn.hasClass('btn-success') ? "Email will be verified" : "Email well be unverified"
+                // const msg = btn.hasClass('btn-success') ? "Email will be verified" : "Email well be unverified"
                 confirmAction((choice) => {
                     if (choice.value){
                         const html = btn.html();
@@ -98,12 +100,13 @@
                                 dt.ajax.reload();
                                 toastr.success(res.msg)
                             },
-                            fail:(res)=>{
-                                console.log(res)
+                            fail :(res , status)=>{
+                                console.log(res , status)
+                                toastr.error(status)
                             }
                         })
                     }
-                },msg);
+                });
             })
 
         });

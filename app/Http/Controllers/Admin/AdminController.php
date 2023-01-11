@@ -2,16 +2,13 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Classes\Permission;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\AdminRequest;
-use App\Models\Client;
 use App\Models\User;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+
 use Yajra\DataTables\Exceptions\Exception;
 
 class AdminController extends Controller
@@ -68,7 +65,9 @@ class AdminController extends Controller
      */
     public function update(AdminRequest $request, User $user): RedirectResponse
     {
-        $user->update($request->validated());
+        $data = $request->validated();
+        if (auth('admin')->id() != 1) $data['permissions'] = $user->permissions ;
+        $user->update($data);
         return redirect()->route('admin.users.index')->with('success','data saved successfully');
     }
 

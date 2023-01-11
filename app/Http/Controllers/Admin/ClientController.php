@@ -3,13 +3,20 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Classes\Permission;
+use App\Classes\Upload;
 use App\Http\Requests\Admin\ClientRequest;
 use App\Jobs\OTPJop;
 use App\Models\Client;
 use Illuminate\Contracts\View\View;
+use Illuminate\Database\Eloquent\Builder as Model;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Yajra\DataTables\Exceptions\Exception;
 
 class ClientController extends Controller
@@ -41,6 +48,15 @@ class ClientController extends Controller
     {
         abort_if(!auth('admin')->user()->can('update-clients'),404);
         $data = $request->validated();
+        $data['email_verified_at'] = $request->boolean('verify') ? now() :null;
+//        if ($request->hasFile('drive_licence')){
+//            Upload::delete($client->drive_licence);
+//            $data['drive_licence'] = Upload::file($data['drive_licence'],'clients','licence_');
+//        }
+//        if ($request->hasFile('image')){
+//            Upload::delete($client->image);
+//            $data['image'] = Upload::file($data['image'],'clients');
+//        }
         $client->update($data);
         return redirect()->route('admin.clients.index')->with('success','data saved successfully');
     }
@@ -60,9 +76,14 @@ class ClientController extends Controller
     {
         abort_if(!auth('admin')->user()->can('create-clients'),404);
         $data = $request->validated();
-        $client = Client::create($data);
-        $otp = $client->otp()->create();
-        $this->dispatch(new OTPJop($client,$otp));
+        $data['image'] = '';
+//        $data['image'] = Upload::file($data['image'],'clients');
+//        if ($request->hasFile('drive_licence')){
+//            $data['drive_licence'] = Upload::file($data['drive_licence'],'clients','licence_');
+//        }
+        Client::create(array_merge($data,[
+            'email_verified_at' => now()
+        ]));
         return redirect()->route('admin.clients.index')->with('success','data saved successfully');
     }
 
@@ -73,12 +94,8 @@ class ClientController extends Controller
     public function toggle(Client $client): JsonResponse
     {
         abort_if(!auth('admin')->user()->can('activate-clients'),404);
-        if ($client->hasVerifiedEmail()){
-            $client->markEmailAsUnverified();
-            return response()->json(['msg'=> 'Email unverified successfully']);
-        }
-        $client->markEmailAsVerified();
-        $client->otp()->delete();
+        $client->is_active = !$client->is_active;
+        $client->save();
         return response()->json(['msg'=> "Email verified successfully"]);
     }
 
@@ -99,15 +116,27 @@ class ClientController extends Controller
      * @throws Exception
      * @return JsonResponse
      */
-    public function datatable(): JsonResponse
+    public function datatable(Request $request): JsonResponse
     {
         abort_if(!auth('admin')->user()->canAny(Permission::keys()),404);
-        return datatables()->eloquent(Client::query()
-            ->select(['id','first_name','mid_name','last_name','email','phone','email_verified_at'])
-        )
-            ->addColumn('email_verified_at',fn(Client $client) => $client->email_verified_at?->format('D, d M Y H:i:s'))
-            ->addColumn('full_name',fn(Client $client) => $client->full_name )
-            ->addColumn('actions',function (Client $row){
+//        $search = $request->search['value'];
+        $query = Client::select(['id','first_name','is_active','mid_name','last_name','email','phone','email_verified_at']);
+//            ->when($search,function (Model $q) use($search){
+//                $q->orWhere('mid_name','like','%'.$search.'%')
+//                    ->orWhere('last_name','like','%'.$search.'%');
+//            });
+//        $query = DB::table('clients')->select(['id','is_active','email','phone','email_verified_at'])
+//            ->selectRaw('concat(first_name," ",mid_name," ", last_name) as full_name')
+//            ->when($search,function (Builder $q) use($search){
+//                $q->orWhere('mid_name','like','%'.$search.'%')
+//                    ->orWhere('last_name','like','%'.$search.'%');
+//            });
+        return datatables($query)
+            ->addColumn('status',fn($client) => $client->is_active ? "Activated" : "Inactivated")
+            ->addColumn('email_verified_at',fn( $client) => Carbon::make($client->email_verified_at)?->format('D, d M Y H:i:s'))
+//            ->addColumn('full_name',fn(Client $client) => $client->full_name )
+            ->addColumn('full_name',fn($client) =>  str_replace('  ',' ', $client->full_name))
+            ->addColumn('actions',function ($row){
                 $admin= auth('admin')->user();
                 $status = null;
                 $edit = null;
@@ -117,7 +146,7 @@ class ClientController extends Controller
                 }
                 if ($admin->can('activate-clients')){
 
-                    if ($row->hasVerifiedEmail()){
+                    if ($row->is_active){
                         $status = '<button  data-url = '.route('admin.clients.toggle_status',$row->id).' class="btn toggle btn-warning"><i style="pointer-events: none" class="fa fa-times"></i></button>';
                     }else{
                         $status = '<button data-url = '.route('admin.clients.toggle_status',$row->id).'  class="btn toggle btn-success"><i style="pointer-events: none" class="fa fa-check"></i></button>';
