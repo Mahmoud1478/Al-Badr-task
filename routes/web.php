@@ -53,7 +53,11 @@ Route::group(['as'=>'client.'],function (){
         Route::post('/register',[ClientAuth::class,'register'])->name('register');
     });
     Route::group(['middleware'=> ['auth:client']],function (){
-        Route::get('/welcome', function () {dd(auth('client')->user());})->middleware(['verified-email']);
+        Route::get('/welcome', function () {
+            echo '<pre>';
+                var_dump(auth('client')->user());
+            echo '</pre>';
+        })->middleware(['verified-email']);
         Route::get('/logout',[ClientAuth::class,'logout'])->name('logout');
         Route::group(['middleware'=> ['unverified-email']],function (){
             Route::get('/verify',[ClientAuth::class,'verify'])->name('verify.email');
