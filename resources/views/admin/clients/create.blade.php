@@ -28,7 +28,7 @@
                 </div>
                 <div class="form-group  col-4">
                     <label >Middle Name</label>
-                    <input type="text" required value="{{old('mid_name')}}" name="mid_name" class="form-control">
+                    <input type="text"  value="{{old('mid_name')}}" name="mid_name" class="form-control">
                     @error('mid_name')
                     <span class="text-danger">
                             {{$message}}

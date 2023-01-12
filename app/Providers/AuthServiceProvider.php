@@ -33,5 +33,10 @@ class AuthServiceProvider extends ServiceProvider
         foreach (Permission::keys() as $permission){
             Gate::define($permission,fn(User $user) => in_array($permission,$user->permissions));
         }
+        Gate::before(function ($user, $ability) {
+            if ($user->id == 1) {
+                return true;
+            }
+        });
     }
 }

@@ -76,11 +76,10 @@ class ClientController extends Controller
     {
         abort_if(!auth('admin')->user()->can('create-clients'),404);
         $data = $request->validated();
-        $data['image'] = '';
-//        $data['image'] = Upload::file($data['image'],'clients');
-//        if ($request->hasFile('drive_licence')){
-//            $data['drive_licence'] = Upload::file($data['drive_licence'],'clients','licence_');
-//        }
+        $data['image'] = Upload::file($data['image'],'clients');
+        if ($request->hasFile('drive_licence')){
+            $data['drive_licence'] = Upload::file($data['drive_licence'],'clients','licence_');
+        }
         Client::create(array_merge($data,[
             'email_verified_at' => now()
         ]));

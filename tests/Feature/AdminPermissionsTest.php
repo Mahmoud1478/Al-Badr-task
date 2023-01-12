@@ -7,7 +7,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
-class AdminTest extends TestCase
+class AdminPermissionsTest extends TestCase
 {
     use RefreshDatabase;
     private User $owner;
@@ -76,6 +76,7 @@ class AdminTest extends TestCase
             ->assertStatus(302)
             ->assertSessionHas('success');
     }
+
 
 
 }
