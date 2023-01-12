@@ -4,12 +4,14 @@ namespace App\Models;
 
 use App\Classes\Upload;
 use App\Jobs\OTPJop;
+use App\Mail\OTPMail;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Mail;
 use Laravel\Sanctum\HasApiTokens;
 
 class Client extends Authenticatable implements MustVerifyEmail
@@ -49,7 +51,8 @@ class Client extends Authenticatable implements MustVerifyEmail
 
     public function send_otp(OTP $OTP)
     {
-        dispatch(new OTPJop($this,$OTP));
+        Mail::to($this->email)->send(new OTPMail($this,$OTP));
+//        dispatch(new OTPJop($this,$OTP));
     }
 
 

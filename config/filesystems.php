@@ -50,6 +50,13 @@ return [
             'visibility' => 'public',
             'throw' => false,
         ],
+        'uploads_testing' => [
+            'driver' => 'local',
+            'root' => public_path('uploads/testing'),
+            'url' => env('APP_URL').'/uploads/testing',
+            'visibility' => 'public',
+            'throw' => false,
+        ],
         's3' => [
             'driver' => 's3',
             'key' => env('AWS_ACCESS_KEY_ID'),

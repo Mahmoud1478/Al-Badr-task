@@ -23,9 +23,9 @@ class ClientFactory extends Factory
             'phone' => fake('ar_EG')->phoneNumber,
             'email' => $this->faker->unique()->email,
             'password' => 123,
-            'latitude' => $this->faker->numberBetween(-90,90),
-            'longitude' => $this->faker->numberBetween(-180,180),
-            'is_active' => $this->faker->numberBetween(0,1)
+            'latitude' => rand(-90, 90),
+            'longitude' => rand(-180,180),
+            'is_active' => rand(0,1)
         ];
     }
 }
