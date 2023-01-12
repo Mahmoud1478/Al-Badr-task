@@ -22,7 +22,7 @@ class UserSeeder extends Seeder
             'email' => 'owner@'.Str::lower(config('app.name')).'.com',
             'email_verified_at' => now(),
             'password' => 'owner',
-            'permissions' => array_keys(Permission::all())
+            'permissions' => Permission::keys(),
         ]);
         User::factory(5)->create();
     }

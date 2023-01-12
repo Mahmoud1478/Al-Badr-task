@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="{{url('admin')}}/plugins/fontawesome-free/css/all.min.css">
     <!-- icheck bootstrap -->
     <link rel="stylesheet" href="{{url('admin')}}/plugins/icheck-bootstrap/icheck-bootstrap.min.css">
+    <link rel="stylesheet" href="{{ url('admin') }}/plugins/toastr/toastr.min.css">
     <!-- Theme style -->
     <link rel="stylesheet" href="{{url('admin')}}/css/adminlte.min.css">
 </head>
@@ -87,7 +88,36 @@
 <script src="{{url('admin')}}/plugins/jquery/jquery.min.js"></script>
 <!-- Bootstrap 4 -->
 <script src="{{url('admin')}}/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="{{url('admin')}}/plugins/toastr/toastr.min.js"></script>
 <!-- AdminLTE App -->
 <script src="{{url('admin')}}/js/adminlte.min.js"></script>
+
+<script>
+    $(document).ready(function (){
+        toastr.options = {
+            "closeButton": true,
+            "debug": false,
+            "newestOnTop": false,
+            "progressBar": true,
+            "positionClass": "toast-top-right",
+            "preventDuplicates": true,
+            "onclick": null,
+            "showDuration": "300",
+            "hideDuration": "1000",
+            "timeOut": "3000",
+            "extendedTimeOut": "1000",
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "fadeIn",
+            "hideMethod": "fadeOut"
+        }
+        @if(session()->has('success'))
+        toastr.success("{{session('success')}}")
+        @endif
+        @if(session()->has('error'))
+        toastr.error("{{session('error')}}")
+        @endif
+    })
+</script>
 </body>
 </html>
